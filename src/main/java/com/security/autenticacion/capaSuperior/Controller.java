@@ -1,4 +1,4 @@
-package com.security.autenticacion.clases;
+package com.security.autenticacion.capaSuperior;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

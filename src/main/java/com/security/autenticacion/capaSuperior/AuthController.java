@@ -1,6 +1,7 @@
-package com.security.autenticacion.clases;
+package com.security.autenticacion.capaSuperior;
 
 import com.security.autenticacion.jwt.JwtUtil;
+import com.security.autenticacion.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,10 +22,12 @@ import java.util.Map;
 public class AuthController {
     private final AuthenticationManager authManager;
     private final JwtUtil jwtUtil;
+    private final UsuarioService usuarioService;
 
-    public AuthController(AuthenticationManager authManager, JwtUtil jwtUtil) {
+    public AuthController(AuthenticationManager authManager, JwtUtil jwtUtil, UsuarioService usuarioService) {
         this.authManager = authManager;
         this.jwtUtil = jwtUtil;
+        this.usuarioService= usuarioService;
     }
 
     @PostMapping("/login")
@@ -53,6 +56,27 @@ public class AuthController {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Error interno del servidor"));
         }
-
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody LoginRequest request) {
+
+        try {
+
+            usuarioService.registrarUsuario(
+                    request.getUsername(),
+                    request.getPassword()
+            );
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of("message", "Usuario registrado correctamente"));
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }
+
+
 }

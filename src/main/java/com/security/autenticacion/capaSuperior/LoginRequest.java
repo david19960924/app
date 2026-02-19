@@ -1,4 +1,4 @@
-package com.security.autenticacion.clases;
+package com.security.autenticacion.capaSuperior;
 
 public class LoginRequest {
     private String username;
