@@ -1,12 +1,13 @@
 inicio();
 
-function inicio(){
 
+function inicio(){
+     const API_URL = window.location.origin;
      const token = localStorage.getItem("jwt");
 
      //llama al backent
      if (!token) {
-          window.location.href = "/formLogin";
+           window.location.href = `${API_URL}/formLogin`;
      }
 
      // Decodificar el payload
@@ -19,7 +20,7 @@ function inicio(){
          console.log("Token expirado");
 
          localStorage.removeItem("jwt");
-         window.location.href = "/formLogin";
+         window.location.href = `${API_URL}/formLogin`;
          return;
      }
 
