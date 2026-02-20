@@ -4,10 +4,7 @@ import com.security.autenticacion.jwt.JwtUtil;
 import com.security.autenticacion.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,12 +38,21 @@ public class AuthController {
             );
 
             UserDetails user = (UserDetails) authentication.getPrincipal();
+            usuarioService.autenticacionExitosa(request.getUsername());
 
             return ResponseEntity.ok(Map.of("token", jwtUtil.generateToken(user)));
         }catch (BadCredentialsException e){
+            if (request.getUsername() != null){
+                usuarioService.incrementarIntentosFallidos(request.getUsername());
+            }
+
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Credenciales incorrectas"));
+        }catch (LockedException e) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "Usuario bloqueado temporalmente"));
         }catch (DisabledException e){
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)

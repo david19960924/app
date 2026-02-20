@@ -27,7 +27,7 @@ function htmlCargado(){
               }
 
               if (response.status === 403) {
-                  throw new Error("Usuario deshabilitado");
+                  throw new Error("Usuario bloqueado temporalmente");
               }
 
               return response.json();
@@ -43,20 +43,7 @@ function htmlCargado(){
               alert(error.message);
               console.log(error.message);
         });
-        /*
-        .then(response => response.json())
-        .then(data => {
-            console.log("Token:", data.token);
 
-            // Guardar token
-            localStorage.setItem("jwt", data.token);
-            window.location.href = "/";
-            //alert("Login exitoso");
-        })
-        .catch(error => {
-            console.error("Error:", error);
-        });
-        */
     });
 }
 

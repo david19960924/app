@@ -2,6 +2,8 @@ package com.security.autenticacion.usuarios;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
@@ -16,6 +18,12 @@ public class Usuario {
     private String password;
 
     private String role;
+
+    private Integer intentosFallidos;
+
+    private Boolean cuentaBloqueada;
+
+    private LocalDateTime bloqueoHasta;
 
     public Usuario(){}
 
@@ -49,5 +57,29 @@ public class Usuario {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Integer getIntentosFallidos() {
+        return intentosFallidos;
+    }
+
+    public void setIntentosFallidos(Integer intentosFallidos) {
+        this.intentosFallidos = intentosFallidos;
+    }
+
+    public Boolean isCuentaBloqueada() {
+        return cuentaBloqueada;
+    }
+
+    public void setCuentaBloqueada(Boolean cuentaBloqueada) {
+        this.cuentaBloqueada = cuentaBloqueada;
+    }
+
+    public LocalDateTime getBloqueoHasta() {
+        return bloqueoHasta;
+    }
+
+    public void setBloqueoHasta(LocalDateTime bloqueoHasta) {
+        this.bloqueoHasta = bloqueoHasta;
     }
 }

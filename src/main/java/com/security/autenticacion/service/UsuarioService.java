@@ -5,6 +5,8 @@ import com.security.autenticacion.usuarios.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class UsuarioService {
     private final UsuarioRepository repository;
@@ -27,6 +29,26 @@ public class UsuarioService {
         usuario.setPassword(passwordEncoder.encode(password));
         usuario.setRole("ADMIN");
 
+        repository.save(usuario);
+    }
+
+    public void incrementarIntentosFallidos(String username) {
+        Usuario usuario = repository.findByUsername(username).get();
+        int nuevosIntentos = usuario.getIntentosFallidos() + 1;
+        usuario.setIntentosFallidos(nuevosIntentos);
+
+        if (nuevosIntentos >= 4) {
+            usuario.setCuentaBloqueada(true);
+            usuario.setBloqueoHasta(LocalDateTime.now().plusMinutes(15));
+        }
+
+        repository.save(usuario);
+    }
+
+    public void autenticacionExitosa(String username){
+        Usuario usuario = repository.findByUsername(username).get();
+        usuario.setIntentosFallidos(0);
+        usuario.setCuentaBloqueada(Boolean.FALSE);
         repository.save(usuario);
     }
 }
